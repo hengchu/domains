@@ -5,7 +5,7 @@ Require Import Setoid.
 Require Import basics.
 
 (** * Some elementary category theory.
-    
+
       Here we develop enough category theory to support our investigations
       of domain theory.  We follow the general strategy used by several
       authors (FIXME look up citation) for defining category theory inside
@@ -42,7 +42,7 @@ Definition ident_op T := Comp.identity _ _ (Comp.mixin T).
 
 Notation "x ∘ y" := (@comp_op _ _ _ _ (x)%cat (y)%cat) : category_hom_scope.
 Notation "'id'" := (@ident_op _ _) : category_hom_scope.
-Notation "'id' ( A )" := (@ident_op _ (A)%cat_ob) (only parsing) 
+Notation "'id' ( A )" := (@ident_op _ (A)%cat_ob) (only parsing)
   : category_hom_scope.
 
 (**  Here we put together the pieces: the setoid structure
@@ -52,7 +52,7 @@ Module Category.
 Section category.
   Variable ob:Type.
   Variable hom : ob -> ob -> Type.
-  
+
   Variable (EQ:forall A B, Eq.mixin_of (hom A B)).
   Variable (COMP:Comp.mixin_of ob hom).
 
@@ -95,7 +95,7 @@ Coercion ob : category >-> Sortclass.
 
 Canonical Structure CAT_EQ (C:category) A B
   := Eq.Pack (hom C A B) (Category.eq C A B).
-Canonical Structure CAT_COMP (C:category) 
+Canonical Structure CAT_COMP (C:category)
   := Comp.Pack (ob C) (hom C) (Category.comp C).
 
 (**  Here we define some easier-to-use versions of the catgory axioms.
@@ -109,10 +109,10 @@ Section category_axioms.
   Definition cat_respects := Category.respects _ _ _ _ (Category.cat_axioms C).
 End category_axioms.
 
-(** Register composition as a morphism for the setoid equality. *) 
+(** Register composition as a morphism for the setoid equality. *)
 Add Parametric Morphism (CAT:category) (A B C:ob CAT) :
   (@comp_op (CAT_COMP CAT) A B C)
-   with signature (eq_op (CAT_EQ CAT B C)) ==> 
+   with signature (eq_op (CAT_EQ CAT B C)) ==>
                   (eq_op (CAT_EQ CAT A B)) ==>
                   (eq_op (CAT_EQ CAT A C))
   as category_morphism.
@@ -123,7 +123,7 @@ Qed.
 (**  Groupoids are categories in which every morphism has an inverse.
      Groupoids generalize groups (hence the name) in the sense that
      a groupoid with a single object forms a group.
-     
+
      When [f] is a morphism in a groupoid [f⁻¹] is its inverse.
   *)
 Module Groupoid.
@@ -146,7 +146,7 @@ Section groupoid.
       { inv_id1 : forall A B (f:hom A B), f ∘ inv A B f ≈ id
       ; inv_id2 : forall A B (f:hom A B), inv A B f ∘ f ≈ id
       }.
-  End axioms. 
+  End axioms.
 
   Record mixin_of :=
   Mixin
@@ -233,16 +233,16 @@ Proof.
   rewrite <- (cat_assoc X).
   rewrite H1.
   rewrite (cat_ident1 X).
-  auto.  
+  auto.
 Qed.
 
-Lemma inv_eq (X:groupoid) (A B:X) (f g:A → B) : 
+Lemma inv_eq (X:groupoid) (A B:X) (f g:A → B) :
   f ≈ g -> f⁻¹ ≈ g⁻¹.
 Proof.
   intro.
   generalize (inv_id1 f). intros.
   transitivity (g⁻¹ ∘ (f ∘ f⁻¹)).
-  - rewrite H at 2.  
+  - rewrite H at 2.
     rewrite (cat_assoc X).
     generalize (inv_id2 g). intros.
     rewrite H1.
@@ -251,7 +251,7 @@ Proof.
     rewrite (cat_ident1 X). auto.
 Qed.
 
-Lemma inv_inj (X:groupoid) (A B:X) (f g:A → B) : 
+Lemma inv_inj (X:groupoid) (A B:X) (f g:A → B) :
   f⁻¹ ≈ g⁻¹ -> f ≈ g.
 Proof.
   intros.
@@ -295,7 +295,7 @@ Next Obligation.
 Qed.
 
 Program Definition mono_id (C:category) (A:C) :=
-  Monomorphism C A A (id(A)) _.  
+  Monomorphism C A A (id(A)) _.
 Next Obligation.
   rewrite (cat_ident2 C) in H.
   rewrite (cat_ident2 C) in H.
@@ -344,7 +344,7 @@ Canonical Structure MONO_CONCRETE
   (CC : concrete C) :
   concrete (MONO_COMP C) :=
     Concrete (MONO_COMP C)
-      (fun X => obmap _ CC X) 
+      (fun X => obmap _ CC X)
       (obeq _ CC)
       (fun X Y f x => hommap _ CC (mono_hom f) x)
       (fun X Y Z g f x =>
@@ -379,7 +379,7 @@ Next Obligation.
 Qed.
 
 Program Definition epi_id (C:category) (A:C) :=
-  Epimorphism C A A (id(A)) _.  
+  Epimorphism C A A (id(A)) _.
 Next Obligation.
   rewrite (cat_ident1 C) in H.
   rewrite (cat_ident1 C) in H.
@@ -426,7 +426,7 @@ Canonical Structure EPI_CONCRETE
   (CC : concrete (CAT_COMP C)) :
   concrete (EPI_COMP C) :=
     Concrete (EPI_COMP C)
-      (fun X => obmap _ CC X) 
+      (fun X => obmap _ CC X)
       (obeq _ CC)
       (fun X Y f x => hommap _ CC (epi_hom f) x)
       (fun X Y Z g f x =>
@@ -456,7 +456,7 @@ Arguments iso_axiom2 [C] [A] [B] i.
 
 Definition iso_hom' (C:category) (A B:C) (f:isomorphism C A B) : Comp.hom _ A B :=
   iso_hom f.
-Definition iso_hom'' (C:category) (A B:ob C) (f:isomorphism C A B) : CAT_EQ C A B := 
+Definition iso_hom'' (C:category) (A B:ob C) (f:isomorphism C A B) : CAT_EQ C A B :=
   iso_hom f.
 
 Coercion iso_hom : isomorphism >-> hom.
@@ -485,7 +485,7 @@ Program Definition iso_compose
   (C:category) (X Y Z:C) (g:Y ↔ Z) (f:X ↔ Y) :=
   Isomorphism C X Z (iso_hom g ∘ iso_hom f) (iso_inv f ∘ iso_inv g) _ _.
 Next Obligation.
-  intros. 
+  intros.
   rewrite <- (cat_assoc C _ _ _ _ (iso_inv f) (iso_inv g) (iso_hom g ∘ iso_hom f)).
   rewrite (cat_assoc C _ _ _ _ (iso_inv g) (iso_hom g) (iso_hom f)).
   rewrite (iso_axiom1 g).
@@ -527,7 +527,7 @@ Program Definition iso_groupoid_mixin (C:category) :=
 Next Obligation.
   constructor.
 
-  simpl; intros. 
+  simpl; intros.
   apply iso_axiom2.
   apply iso_axiom1.
 Qed.
@@ -572,7 +572,7 @@ Section terminated.
   ; axiom : forall A (f:hom A terminus), f ≈ terminate A
   }.
 End terminated.
-  
+
 Record terminated :=
   Terminated
   { ob : Type
@@ -632,7 +632,7 @@ Section initialized.
   ; axiom : forall A (f:hom initium A), f ≈ initiate A
   }.
 End initialized.
-  
+
 Record initialized :=
   Initialized
   { ob : Type
@@ -684,7 +684,7 @@ Section cocartesian.
   Variables (ob:Type) (hom:ob -> ob -> Type).
   Variable eq:forall A B:ob, Eq.mixin_of (hom A B).
   Variable comp:Comp.mixin_of ob hom.
-  
+
   Definition eq' A B := Eq.Pack _ (eq A B).
   Definition comp' := Comp.Pack ob hom comp.
 
@@ -701,7 +701,7 @@ Section cocartesian.
     Record axioms :=
       Axioms
       { inl_commute : forall (C A B:ob) f g,
-          either C A B f g ∘ inl A B ≈ f 
+          either C A B f g ∘ inl A B ≈ f
       ; inr_commute : forall (C A B:ob) f g,
           either C A B f g ∘ inr A B ≈ g
       ; either_univ : forall (C A B:ob) f g h,
@@ -720,7 +720,7 @@ Section cocartesian.
   ; cocartesian_axioms : axioms sum inl inr either
   }.
 End cocartesian.
-  
+
 Record cocartesian :=
   Cocartesian
   { ob : Type
@@ -768,13 +768,13 @@ Arguments either [X C A B] f g.
 Lemma inl_commute (X:cocartesian) :
   forall (C A B:ob X) (f:A → C) (g:B → C), either f g ∘ ι₁ ≈ f.
 
-Proof (Cocartesian.inl_commute _ _ _ _ _ _ _ _ 
+Proof (Cocartesian.inl_commute _ _ _ _ _ _ _ _
          (Cocartesian.cocartesian_axioms _ _ _ _ (Cocartesian.mixin X))).
 
 Lemma inr_commute (X:cocartesian) :
   forall (C A B:ob X) (f:A → C) (g:B → C), either f g ∘ ι₂ ≈ g.
 
-Proof (Cocartesian.inr_commute _ _ _ _ _ _ _ _ 
+Proof (Cocartesian.inr_commute _ _ _ _ _ _ _ _
          (Cocartesian.cocartesian_axioms _ _ _ _ (Cocartesian.mixin X))).
 
 Lemma either_univ (X:cocartesian) :
@@ -814,7 +814,7 @@ Section cartesian.
   Variables (ob:Type) (hom:ob -> ob -> Type).
   Variable eq:forall A B:ob, Eq.mixin_of (hom A B).
   Variable comp:Comp.mixin_of ob hom.
-  
+
   Definition eq' A B := Eq.Pack _ (eq A B).
   Definition comp' := Comp.Pack ob hom comp.
 
@@ -850,7 +850,7 @@ Section cartesian.
   ; cartesian_axioms : axioms product proj1 proj2 pairing
   }.
 End cartesian.
-  
+
 Record cartesian :=
   Cartesian
   { ob : Type
@@ -898,13 +898,13 @@ Notation "〈 f , g 〉" := (Cartesian.pairing_op _ _ _ _ f g)
 Lemma proj1_commute (X:cartesian) :
   forall (C A B:ob X) (f:C → A) (g:C → B), π₁ ∘ 〈 f, g 〉 ≈ f.
 
-Proof (Cartesian.proj1_commute _ _ _ _ _ _ _ _ 
+Proof (Cartesian.proj1_commute _ _ _ _ _ _ _ _
          (Cartesian.cartesian_axioms _ _ _ _ (Cartesian.mixin X))).
 
 Lemma proj2_commute (X:cartesian) :
   forall (C A B:ob X) (f:C → A) (g:C → B), π₂ ∘ 〈 f, g 〉 ≈ g.
 
-Proof (Cartesian.proj2_commute _ _ _ _ _ _ _ _ 
+Proof (Cartesian.proj2_commute _ _ _ _ _ _ _ _
          (Cartesian.cartesian_axioms _ _ _ _ (Cartesian.mixin X))).
 
 Lemma pairing_univ (X:cartesian) :
@@ -933,7 +933,7 @@ Qed.
 
 
 (**  A distributive category has binary products and binary coproducts,
-     and sums distribute over products. 
+     and sums distribute over products.
   *)
 Module Distributive.
 Section distributive.
@@ -945,7 +945,7 @@ Section distributive.
   Variable cartesian : Cartesian.mixin_of ob hom eq comp.
   Variable initialized : Initialized.mixin_of ob hom eq.
   Variable cocartesian : Cocartesian.mixin_of ob hom eq comp.
-  
+
   Definition eq' A B := Eq.Pack _ (eq A B).
   Definition comp' := Comp.Pack ob hom comp.
   Definition cartesian' := Cartesian ob hom eq comp cat_axioms terminated cartesian.
@@ -988,15 +988,15 @@ Definition category (X:distributive) : category :=
 Definition terminated (X:distributive) : terminated :=
   Terminated (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) (terminated_mixin X).
 Definition cartesian (X:distributive) : cartesian :=
-  Cartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) 
+  Cartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
      (terminated_mixin X) (cartesian_mixin X).
 Definition initialized (X:distributive) : initialized :=
   Initialized (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) (initialized_mixin X).
 Definition cocartesian (X:distributive) : cocartesian :=
-  Cocartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) 
+  Cocartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
      (initialized_mixin X) (cocartesian_mixin X).
 End Distributive.
-  
+
 Notation distributive := Distributive.distributive.
 Notation Distributive := Distributive.Distributive.
 
@@ -1015,13 +1015,13 @@ Coercion Distributive.initialized : distributive >-> initialized.
 Coercion Distributive.cocartesian : distributive >-> cocartesian.
 
 Notation distrib_law := Distributive.distrib_law_op.
-Arguments distrib_law [X A B C].
+Arguments distrib_law {X A B C}.
 
 (**  Cartesian closed categories, in addition to being cartesian,
      have "internal" hom objects corresponding to each homset called
      the exponential object.  Here we give the definition of cartesian
      closure in terms of curry and apply morphisms.
-     
+
      When [A] and [B] are objects, [A ⇒ B] is the exponential object.
      The morphism [apply : (A⇒B) × A → B] applies an internal hom
      to an argument.  For [f : C×A → B], we have a unique curried
@@ -1035,7 +1035,7 @@ Section cartesian_closed.
   Variable cat_axioms : Category.axioms ob hom eq comp.
   Variable terminated : Terminated.mixin_of ob hom eq.
   Variable cartesian : Cartesian.mixin_of ob hom eq comp.
-  
+
   Definition eq' A B := Eq.Pack _ (eq A B).
   Definition comp' := Comp.Pack ob hom comp.
   Definition cartesian' := Cartesian ob hom eq comp cat_axioms terminated cartesian.
@@ -1093,10 +1093,10 @@ Definition category (X:cartesian_closed) : category :=
 Definition terminated (X:cartesian_closed) : terminated :=
   Terminated (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) (terminated_mixin X).
 Definition cartesian (X:cartesian_closed) : cartesian :=
-  Cartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) 
+  Cartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
      (terminated_mixin X) (cartesian_mixin X).
 End CartesianClosed.
-  
+
 Notation cartesian_closed := CartesianClosed.cartesian_closed.
 Notation CartesianClosed := CartesianClosed.CartesianClosed.
 
@@ -1115,7 +1115,7 @@ Notation "A ⇒ B" := (CartesianClosed.exp_op _ A B)
   : category_ob_scope.
 Notation apply := (CartesianClosed.apply_op _ _ _).
 
-Lemma curry_commute (X:cartesian_closed) : 
+Lemma curry_commute (X:cartesian_closed) :
   forall (C A B:ob X) (f:C×A → B), apply ∘ 〈 Λ f ∘ π₁, π₂ 〉 ≈ f.
 
 Proof (CartesianClosed.curry_commute _ _ _ _ _ _ _ _ _ _
@@ -1137,7 +1137,7 @@ Proof.
   intros. apply curry_univ. rewrite curry_commute. auto.
 Qed.
 
-Lemma curry_commute3 (X:cartesian_closed) : 
+Lemma curry_commute3 (X:cartesian_closed) :
   forall (D C A B:X) (f:C×A → B) (g:D → C) (h:D → A),
     apply ∘ 〈 Λ f ∘ g, h 〉 ≈ f ∘ 〈 g, h 〉.
 Proof.
@@ -1161,7 +1161,7 @@ Proof.
     apply curry_commute.
 Qed.
 
-Lemma curry_commute2 (X:cartesian_closed) : 
+Lemma curry_commute2 (X:cartesian_closed) :
   forall (C A B:X) (f:C×A → B) (h:C → A),
     apply ∘ 〈 Λ f, h 〉 ≈ f ∘ 〈 id, h 〉.
 Proof.
@@ -1189,7 +1189,7 @@ Record polynomial_category :=
   ; cartesian_mixin : Cartesian.mixin_of ob hom eq_mixin comp_mixin
   ; initialized_mixin : Initialized.mixin_of ob hom eq_mixin
   ; cocartesian_mixin : Cocartesian.mixin_of ob hom eq_mixin comp_mixin
-  ; ccc_mixin : CartesianClosed.mixin_of ob hom eq_mixin comp_mixin 
+  ; ccc_mixin : CartesianClosed.mixin_of ob hom eq_mixin comp_mixin
        cat_axioms terminated_mixin cartesian_mixin
   ; distributive_mixin : Distributive.mixin_of ob hom eq_mixin comp_mixin
        cat_axioms terminated_mixin cartesian_mixin
@@ -1206,16 +1206,16 @@ Definition terminated (X:polynomial_category) : terminated :=
   Terminated (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
      (terminated_mixin X).
 Definition cartesian (X:polynomial_category) : cartesian :=
-  Cartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) 
+  Cartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
      (terminated_mixin X) (cartesian_mixin X).
 Definition initialized (X:polynomial_category) : initialized :=
   Initialized (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
      (initialized_mixin X).
 Definition cocartesian (X:polynomial_category) : cocartesian :=
-  Cocartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) 
+  Cocartesian (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
      (initialized_mixin X) (cocartesian_mixin X).
 Definition cartesian_closed (X:polynomial_category) : cartesian_closed :=
-  CartesianClosed (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X) 
+  CartesianClosed (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
       (cartesian_mixin X) (terminated_mixin X) (ccc_mixin X).
 Definition distributive (X:polynomial_category) : distributive :=
   Distributive (ob X) (hom X) (eq_mixin X) (comp_mixin X) (cat_axioms X)
@@ -1260,18 +1260,18 @@ Record concrete (C:category) :=
                obmap X -> obmap Y
   ; hommap_eq : forall (A B:ob C) (f g:hom C A B) (x y:obmap A),
        f ≈ g -> Eq.eq _ (obeq A) x y -> Eq.eq _ (obeq B) (hommap f x) (hommap g y)
-  ; hommap_axiom : forall 
-    {X Y Z:ob C} 
+  ; hommap_axiom : forall
+    {X Y Z:ob C}
      (g:hom C Y Z) (f:hom C X Y) (x:obmap X),
        Eq.eq _ (obeq Z) (hommap (g ∘ f) x) (hommap g (hommap f x))
   }.
 
-Notation "f # x" := (hommap _ _ f x) 
+Notation "f # x" := (hommap _ _ f x)
   : category_hom_scope.
 
 Canonical Structure CONCRETE_EQ (CAT:category) (CC:concrete CAT) (A:ob CAT) :=
   Eq.Pack (obmap CAT CC A) (obeq CAT CC A).
-  
+
 Add Parametric Morphism (C:category) (CC:concrete C) (A B:ob C) :
   (@hommap C CC A B)
     with signature (eq_op (CAT_EQ C A B)) ==>
@@ -1280,14 +1280,14 @@ Add Parametric Morphism (C:category) (CC:concrete C) (A B:ob C) :
    as apply_morphism.
 Proof.
   intros; apply hommap_eq; auto.
-Qed.  
+Qed.
 
 
 Module Functor.
-Section functor.  
+Section functor.
   Variable C D:category.
 
-  (** NOTE!! 
+  (** NOTE!!
       The functor axioms are written in a very specific way that differs
       slightly from the usual presentation.
       This is done so that the definition of functor composition
@@ -1361,7 +1361,7 @@ Section functor_compose.
     (fun A B f =>
       Functor.hom_map F (Functor.ob_map G A) (Functor.ob_map G B)
         (Functor.hom_map G A B f))
-    (fun A f H => 
+    (fun A f H =>
       Functor.ident _ _ _
         (Functor.ident _ _ _ H))
     (fun A B C f g h H =>
@@ -1375,7 +1375,7 @@ End functor_compose.
 
 Add Parametric Morphism (C D:category) (F:functor C D) (A B:ob C) :
   (@Functor.hom_map C D F A B)
-  with signature (eq_op (CAT_EQ C A B)) ==> 
+  with signature (eq_op (CAT_EQ C A B)) ==>
                  (eq_op (CAT_EQ D (Functor.ob_map F A) (Functor.ob_map F B)))
   as functor_morphism.
 Proof.
@@ -1552,19 +1552,19 @@ Qed.
 Canonical Structure FUNC_COMP C D := CAT_COMP _ _ (FUNC C D).
 Canonical Structure FUNC_EQ C D := CAT_EQ _ _ (FUNC C D).
 *)
- 
+
 (**  Here we define pullbacks in the direct style.
   *)
 Module Pullback.
 Section pullback.
   Variable C:category.
 
-  Definition commuting_square (X Y Z W:ob C) 
+  Definition commuting_square (X Y Z W:ob C)
     (f:X → Z) (g:Y → Z)
     (f':W → Y) (g': W → X) :=
       g ∘ f' ≈ f ∘ g'.
 
-  Record square  (X Y Z W:ob C) 
+  Record square  (X Y Z W:ob C)
     (f:X → Z) (g:Y → Z)
     (f':W → Y) (g': W → X) :=
     Square
@@ -1612,7 +1612,7 @@ Section pullback_lemma.
        diagrams are pullbacks then the outer diagram is a pullback.
 
 <<
-        f1 
+        f1
      R ----> S
      |       |
   g1 |       | h1
@@ -1660,7 +1660,7 @@ Section pullback_lemma.
       red. red in H.
       generalize (axiom2 PB2 _ _ _ pb_lemma1_comm).  intro.
       auto.
-    Qed.      
+    Qed.
     End pb_map.
 
     Program Definition pullback_lemma1 : square f3 (h2 ∘ h1) f1 (g2 ∘ g1) :=
@@ -1676,7 +1676,7 @@ Section pullback_lemma.
         etransitivity. apply cat_assoc.
         rewrite H.
         symmetry. apply cat_assoc.
-    Qed.      
+    Qed.
     Next Obligation.
       unfold pullback_lemma_map2.
       etransitivity.
@@ -1700,7 +1700,7 @@ Section pullback_lemma.
       apply (uniq PB1).
       rewrite <- (cat_assoc _ _ _ _ _ f2 g1 _).
       rewrite H1. auto.
-    Qed.      
+    Qed.
   End pullback_lemma1.
 End pullback_lemma.
 
@@ -1754,10 +1754,10 @@ Section cone.
   Record cone :=
     Cone
     { point : ob C
-    ; spoke : forall j, point → (F j) 
-    ; axiom : forall j j' (h:j → j'), spoke j' ≈ F·h ∘ spoke j 
+    ; spoke : forall j, point → (F j)
+    ; axiom : forall j j' (h:j → j'), spoke j' ≈ F·h ∘ spoke j
     }.
-  
+
   Record cone_hom (M N:cone) :=
     Cone_hom
     { hom_map :> point M → point N
@@ -1769,7 +1769,7 @@ Section cone.
 
   Program Definition cone_ident (M:cone) :=
     Cone_hom M M (id) _.
-  Next Obligation. 
+  Next Obligation.
     rewrite (cat_ident1 C _ _ (spoke M j)). reflexivity.
   Qed.
 
@@ -1781,14 +1781,14 @@ Section cone.
     rewrite (hom_axiom g).
     rewrite (hom_axiom f).
     symmetry; apply cat_assoc.
-  Qed.    
+  Qed.
 
   Program Definition CONE : category :=
     Category cone cone_hom
       (fun A B => Eq.Mixin _ (fun f g => hom_map f ≈ hom_map g) _ _ _)
       (Comp.Mixin _ _ cone_ident cone_compose)
       _.
-  Next Obligation.      
+  Next Obligation.
     eauto.
   Qed.
   Next Obligation.
@@ -1849,7 +1849,7 @@ Section alg.
   Initial_alg
   { init :> alg
   ; cata : forall M:alg, alg_hom init M
-  ; cata_axiom : forall (M:alg) (h:alg_hom init M), 
+  ; cata_axiom : forall (M:alg) (h:alg_hom init M),
        hom_map _ _ h ≈ hom_map _ _ (cata M)
   }.
 
@@ -1911,7 +1911,7 @@ Section alg.
       rewrite Functor.ident.
       rewrite (cat_ident1 _ _ _ (iota I)).
       reflexivity. reflexivity.
-  Qed.    
+  Qed.
 
   Lemma initial_inj_epic : forall (I:initial_alg) B (g h: I → B),
     g ∘ iota I ≈ h ∘ iota I ->
@@ -1949,7 +1949,7 @@ Arguments Initial_alg [C] [F] init cata cata_axiom.
 Program Definition ALG C (F:functor C C) : category :=
     Category (alg C F) (@alg_hom C F)
       (fun A B => Eq.Mixin _ (fun f g => Alg.hom_map f ≈ Alg.hom_map g) _ _ _)
-      (Comp.Mixin _ _ (@ident _ _) (@compose _ _)) 
+      (Comp.Mixin _ _ (@ident _ _) (@compose _ _))
       _.
 Next Obligation.
   eauto.
@@ -2051,9 +2051,9 @@ Section product_category.
     - simpl; intros. split; simpl; apply cat_assoc.
     - simpl; intros. destruct H; destruct H0.
       split; simpl; apply cat_respects; auto.
-  Qed.    
+  Qed.
 
-  Canonical Structure PROD := 
+  Canonical Structure PROD :=
     Category prod_ob prod_hom hom_eq_mixin comp_mixin prod_cat_axioms.
 End product_category.
 End PROD.
@@ -2102,7 +2102,7 @@ Arguments pairF [C D E] _ _.
 
 Section projF.
   Variables C D:category.
-  
+
   Program Definition fstF : functor (PROD C D) C :=
     Functor (PROD C D) C
       (fun X => obl X)
@@ -2169,7 +2169,7 @@ Module TYPE.
   Definition tob := Type.
   Definition thom (A B:tob) := A -> B.
 
-  Definition ident A 
+  Definition ident A
     := fun x:A => x.
 
   Definition compose (A B C:tob) (f:B -> C) (g:A -> B)
@@ -2177,12 +2177,12 @@ Module TYPE.
 
   Program Definition TYPE : category :=
     Category tob thom
-        (fun A B => (lib_eq (thom A B))) 
+        (fun A B => (lib_eq (thom A B)))
         (Comp.Mixin _ _ ident compose)
         _.
   Next Obligation.
     constructor.
-    
+
     intros; compute. reflexivity.
     intros; compute. reflexivity.
     intros; compute. reflexivity.
@@ -2201,7 +2201,7 @@ Module SET.
     However, the following workaround seems just as good.
  *)
 Record ob :=
-  Ob 
+  Ob
   { carrier :> Type
   ; mixin : Eq.mixin_of carrier
   }.
@@ -2225,8 +2225,8 @@ Definition ident (A:ob) : hom A A :=
   Hom A A (fun x => x) (fun x y H => H).
 
 Definition compose (A B C:ob) (f:hom B C) (g:hom A B) : hom A C :=
-  Hom A C 
-    (fun x => f (g x)) 
+  Hom A C
+    (fun x => f (g x))
     (fun x y H => hom_axiom _ _ f _ _ (hom_axiom _ _ g _ _ H)).
 
 Definition set_hom_comp : Comp.mixin_of ob hom :=

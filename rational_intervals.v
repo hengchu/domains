@@ -1,6 +1,7 @@
 Require Import QArith.
 Require Import Qminmax.
 Require Import Setoid.
+Require Import Psatz.
 
 Lemma Q_dense (q1 q2:Q) :
   q1 < q2 -> exists q', q1 < q' /\ q' < q2.
@@ -103,12 +104,12 @@ Proof.
   right; intros [??].
   assert (q < q).
   apply Qlt_le_trans with (rint_start r); auto.
-  red in H1. abstract omega.
+  red in H1. abstract lia.
   destruct (Qlt_le_dec (rint_end r) q).
   right; intros [??].
   assert (rint_end r < rint_end r).
   apply Qlt_le_trans with q; auto.
-  red in H1. abstract omega.
+  red in H1. abstract lia.
   left. split; auto.
 Defined.
 
@@ -121,11 +122,11 @@ Proof.
   right; intros [??].
   assert (q < q).
   apply Qlt_le_trans with (rint_end r); auto.
-  red in H1. abstract omega.
+  red in H1. abstract lia.
   right; intros [??].
   assert (rint_start r < rint_start r).
   apply Qlt_le_trans with q; auto.
-  red in H1. abstract omega.
+  red in H1. abstract lia.
 Defined.
 
 
