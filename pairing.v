@@ -104,7 +104,7 @@ Proof.
   - destruct y; simpl; f_equal; auto.
     + rewrite deflate_inflate1. auto.
     + rewrite deflate_inflate1. auto.
-Qed.  
+Qed.
 
 Lemma deflate_inflate' : forall y x,
   deflate' (inflate x + inflate' y) = Npos y.
@@ -229,7 +229,7 @@ Lemma pairing_unpairing : forall z, pairing (unpairing z) = z.
 Proof.
   intro z. destruct z. simpl; auto.
   unfold unpairing.
-  revert p. fix 1. intro p.
+  revert p. fix pairing_unpairing 1. intro p.
   destruct p.
   - destruct p.
     + rewrite deflate11. rewrite deflate11'.

@@ -43,7 +43,7 @@ Proof.
     + apply single_axiom; auto.
     + destruct (rint_enum_complete r) as [n [r' [??]]]; auto.
       exists n. rewrite H0. auto.
-  - intros. destruct H. 
+  - intros. destruct H.
     destruct H. destruct H1.
     destruct x. destruct y. simpl in *.
     apply rint_ord_test in H3. destruct H3.
@@ -84,7 +84,7 @@ Next Obligation.
       + apply Qlt_le_weak.
         apply Qlt_trans with q; auto.
       + apply rint_proper.
-  } 
+  }
   exists (RatInt _ _ H3).
   split; simpl.
   - apply rint_ord_test; split; simpl.
@@ -126,7 +126,7 @@ Proof.
 Qed.
 
 Lemma injq_converges A q :
-  realdom_converges A (injq q ∘ PLT.terminate _ A). 
+  realdom_converges A (injq q ∘ PLT.terminate _ A).
 Proof.
   red; intros.
   set (x1 := q - ε/(2#1)).
@@ -140,9 +140,9 @@ Proof.
     - field_simplify. apply Qle_refl.
     - apply Qle_trans with (q + ε)%Q.
       + apply Qplus_le_compat; intuition.
-      + field_simplify. 
+      + field_simplify.
         field_simplify. intuition.
-  } 
+  }
   exists (RatInt x1 x2 H0).
   simpl. split.
   - apply PLT.compose_hom_rel.
@@ -288,10 +288,10 @@ Proof.
     { intros.
       apply rint_opp_correct in H2.
       red in H2. rewrite Qopp_involutive in H2. auto.
-    } 
+    }
     apply H.
     apply rint_opp_correct. auto.
-  
+
   - simpl in H. apply ident_elem in H.
     apply PLT.compose_hom_rel.
     exists (rint_opp r).
@@ -302,7 +302,7 @@ Proof.
       { intros.
         apply rint_opp_correct in H1.
         red in H1. rewrite Qopp_involutive in H1. auto.
-      } 
+      }
       apply H.
       apply rint_opp_correct.
       red. rewrite Qopp_involutive. auto.
@@ -372,7 +372,7 @@ Qed.
 Program Definition real_plus : (PreRealDom ⊗ PreRealDom)%plt → PreRealDom :=
   PLT.Hom true (PreRealDom ⊗ PreRealDom)%plt PreRealDom real_plus_rel _ _.
 Next Obligation.
-  intros. 
+  intros.
   destruct x. destruct x'.
   rewrite real_plus_rel_elem in H1. rewrite real_plus_rel_elem.
   transitivity y; auto.
@@ -486,7 +486,7 @@ Qed.
 Program Definition real_mult : (PreRealDom ⊗ PreRealDom)%plt → PreRealDom :=
   PLT.Hom true (PreRealDom ⊗ PreRealDom)%plt PreRealDom real_mult_rel _ _.
 Next Obligation.
-  intros. 
+  intros.
   destruct x. destruct x'.
   rewrite real_mult_rel_elem in H1. rewrite real_mult_rel_elem.
   transitivity y; auto.
@@ -537,7 +537,7 @@ Proof.
       split.
       - eapply Qle_lt_trans; [ apply H2 | auto ].
       - eapply Qlt_le_trans; [ apply H11 | auto ].
-    } 
+    }
     apply rint_mult_correct in H8.
     destruct H8 as [q1 [q2 [?[??]]]].
     apply rint_mult_correct_interior with q1 q2.
@@ -565,11 +565,11 @@ Proof.
     [ unfold q; apply Q.le_max_l | auto |].
   destruct (H a γ) as [r [??]]; auto.
   destruct (H0 a γ) as [s [??]]; auto.
-  
+
   destruct (plt_hom_directed2 _ _ _ f a m r) as [r' [?[??]]]; auto.
   destruct (plt_hom_directed2 _ _ _ g a n s) as [s' [?[??]]]; auto.
-  
-  assert (Hr' : rint_end r' - rint_start r' <= γ). 
+
+  assert (Hr' : rint_end r' - rint_start r' <= γ).
   { eapply Qle_trans; [ | apply H9 ].
     ring_simplify.
     apply rint_ord_test in H14. destruct H14.
@@ -577,8 +577,8 @@ Proof.
     rewrite <- (Qplus_le_l _ _ (rint_start r')).
     rewrite <- (Qplus_le_l _ _ (rint_start r)).
     ring_simplify. auto.
-  } 
-  assert (Hs' : rint_end s' - rint_start s' <= γ). 
+  }
+  assert (Hs' : rint_end s' - rint_start s' <= γ).
   { eapply Qle_trans; [ | apply H11 ].
     ring_simplify.
     apply rint_ord_test in H17. destruct H17.
@@ -586,7 +586,7 @@ Proof.
     rewrite <- (Qplus_le_l _ _ (rint_start s')).
     rewrite <- (Qplus_le_l _ _ (rint_start s)).
     ring_simplify. auto.
-  } 
+  }
 
   exists (rint_mult r' s').
   split.
@@ -599,13 +599,13 @@ Proof.
   - apply rint_ord_test in H13.
     apply rint_ord_test in H16.
     revert Hr' Hs' H13 H16.
-  
+
     cut (forall m1 m2 n1 n2,
          let q := Qmax 1
           (Qmax (Qabs m1)
              (Qmax (Qabs m2)
                 (Qmax (Qabs n1) (Qabs n2))))
-         in 
+         in
       rint_end r' - rint_start r' <= γ ->
       rint_end s' - rint_start s' <= γ ->
       m1 <= rint_start r' /\ rint_end r' <= m2 ->
@@ -623,7 +623,7 @@ Proof.
           * split; auto.
             apply (Qplus_le_l _ _ (rint_start s')). ring_simplify. apply rint_proper.
         + apply Qmult_le_compat; [ split |].
-          * apply (Qmult_le_compat 0 0). 
+          * apply (Qmult_le_compat 0 0).
             ** split.
                *** apply Qle_refl.
                *** compute. discriminate.
@@ -654,7 +654,7 @@ Proof.
         rewrite (Q.max_comm (Qmax (Qabs n1) (Qabs n2))).
         rewrite <- Q.max_assoc.
         reflexivity.
-      } 
+      }
       rewrite H4.
       apply H; auto.
 
@@ -687,7 +687,7 @@ Proof.
            rewrite <- (Q.max_assoc (Qabs m1)).
            apply Qle_refl.
 
-    + simpl; intros.  
+    + simpl; intros.
       set (q := Qmax 1
                  (Qmax (Qabs m1)
                    (Qmax (Qabs m2)
@@ -701,9 +701,9 @@ Proof.
       apply Qle_trans with
         ((x1*(y2-y1)) + (y1*(x2-x1)))%Q;
           [ ring_simplify; apply Qle_refl |].
-      apply Qle_trans with (q*γ + q*γ)%Q; 
+      apply Qle_trans with (q*γ + q*γ)%Q;
           [ | ring_simplify; apply Qle_refl ].
-      apply Qplus_le_compat.  
+      apply Qplus_le_compat.
       * apply Qmult_le_compat; intuition.
         ** apply Qle_trans with x2; auto.
            apply Qle_trans with m2; auto.
@@ -746,9 +746,9 @@ Proof.
       apply Qle_trans with (q*γ + q*γ)%Q;
         [| ring_simplify; apply Qle_refl ].
       apply Qle_trans with (0 + (x1*(y2-y1)))%Q.
-      * ring_simplify. ring_simplify. 
+      * ring_simplify. ring_simplify.
         apply Qle_refl.
-      * apply Qplus_le_compat.  
+      * apply Qplus_le_compat.
         ** apply (Qmult_le_compat 0 0); intuition.
            apply Qle_trans with 1%Q; [ compute; discriminate |].
            unfold q. apply Q.le_max_l.
@@ -782,7 +782,7 @@ Proof.
         [ ring_simplify; apply Qle_refl |].
       apply Qle_trans with (q*γ + q*γ)%Q;
         [ | ring_simplify; apply Qle_refl ].
-      apply Qplus_le_compat.  
+      apply Qplus_le_compat.
       * apply Qmult_le_compat; intuition.
         ** apply Qle_trans with (Qabs m2).
            *** apply Qle_trans with x2; auto.
@@ -844,7 +844,7 @@ Proof.
                                  ******* unfold q. apply Q.le_max_l.
                **** split; [ apply Qle_refl |].
                     intuition.
-  
+
         ** rewrite <- (Qplus_le_l _ _ (-(x1*y1))).
            rewrite <- (Qplus_le_l _ _ ((x2*y1))). ring_simplify.
            apply Qle_trans with (0+0+0)%Q; [ compute; discriminate |].
@@ -887,7 +887,7 @@ Proof.
                           unfold q. apply Q.le_max_l.
                **** split; [ apply Qle_refl |].
                     intuition.
-  
+
         ** rewrite <- (Qplus_le_l _ _ (-(x2*y2))).
            rewrite <- (Qplus_le_l _ _ ((x2*y1))). ring_simplify.
            apply Qle_trans with (0+0+0)%Q; [ compute; discriminate |].
@@ -954,7 +954,7 @@ Qed.
 Next Obligation.
   red; intro.
   apply prove_directed; auto.
-  intros. 
+  intros.
   apply erel_image_elem in H.
   apply erel_image_elem in H0.
   rewrite real_recip_rel_elem in H.
@@ -973,7 +973,7 @@ Next Obligation.
           rewrite H5 in H2.
           ring_simplify in H2.
           compute in H2. discriminate.
-        } 
+        }
         apply Qeq_trans with (1 / rint_start x).
         - apply Qmult_inj_r with (rint_start x); auto.
           field_simplify; auto.
@@ -986,7 +986,7 @@ Next Obligation.
           field_simplify in H4.
           field_simplify in H4.
           apply Qeq_sym. auto.
-      } 
+      }
       assert (Qmax (rint_start x0) (rint_start y) <=
               Qmin (rint_end x0) (rint_end y)).
       { apply Qle_trans with q1.
@@ -1000,7 +1000,7 @@ Next Obligation.
           + destruct H1; intuition.
           + rewrite H5.
             destruct H3; intuition.
-      } 
+      }
       exists (RatInt _ _ H6).
       split.
       * apply rint_ord_test.
@@ -1016,7 +1016,7 @@ Next Obligation.
            apply real_recip_rel_elem.
            red. simpl; intros.
            clear q1 H1 H2 q2 H3 H4 H5.
-  
+
            destruct (H a) as [q1 [??]]; auto.
            destruct (H0 a) as [q2 [??]]; auto.
            assert (q1 == q2).
@@ -1025,7 +1025,7 @@ Next Obligation.
                rewrite H5 in H2.
                ring_simplify in H2.
                compute in H2. discriminate.
-             } 
+             }
              apply Qeq_trans with (1 / a).
              - apply Qmult_inj_r with a; auto.
                field_simplify; auto.
@@ -1038,7 +1038,7 @@ Next Obligation.
                field_simplify in H4.
                field_simplify in H4.
                apply Qeq_sym. auto.
-           } 
+           }
            exists q1.
            split; auto.
            split; simpl; auto.
@@ -1074,7 +1074,7 @@ Proof.
     + apply real_opp_rel_elem.
       apply rint_ord_test. simpl.
       do 2 rewrite Qopp_involutive. split; apply Qle_refl.
-  
+
   - apply PLT.compose_hom_rel in H. destruct H as [y [??]].
     simpl in *.
     apply real_opp_rel_elem in H0.
@@ -1085,14 +1085,14 @@ Proof.
     + apply real_recip_rel_elem.
       red; intros.
       destruct (H (-a0)) as [q [??]].
-      * apply rint_opp_correct. 
+      * apply rint_opp_correct.
         red. rewrite Qopp_involutive. auto.
       * hnf in H0.
         exists (-q). split.
         ** apply H0.
            apply rint_opp_correct. auto.
         ** rewrite <- H3. ring.
-Qed.  
+Qed.
 
 
 Lemma real_recip_canonical A (f: A → PreRealDom) :
@@ -1125,12 +1125,12 @@ Proof.
         ** assert (Hr0 : ~in_interval 0 r).
            { intro. destruct (H1 0%Q) as [?[??]]; auto.
              ring_simplify in H14. compute in H14. discriminate.
-           } 
+           }
            destruct (Qlt_le_dec 0 (rint_start r)).
-  
+
            *** assert (0 < q2 /\ q2 <= q1).
                { destruct H3.
-                 destruct (recip_find_interior (rint_start r') (rint_end r') (rint_start r') q1 q2); 
+                 destruct (recip_find_interior (rint_start r') (rint_end r') (rint_start r') q1 q2);
                    intuition.
                  - apply Qlt_le_trans with (rint_start r); intuition.
                  - apply rint_proper.
@@ -1138,7 +1138,7 @@ Proof.
                }
                destruct H12.
                exists (RatInt q2 q1 H13).
-               split. 
+               split.
                **** apply PLT.compose_hom_rel.
                     exists r'. split; auto.
                     simpl. apply real_recip_rel_elem.
@@ -1173,20 +1173,20 @@ Proof.
            *** assert (Hr : rint_end r < 0).
                { destruct (Qlt_le_dec (rint_end r) 0); auto.
                  elim Hr0. split; auto.
-               } 
+               }
 
                assert (q2 <= q1 /\ q1 < 0).
                { destruct H3.
-                 destruct (recip_find_interior' (rint_start r') (rint_end r') (rint_start r') q1 q2); 
+                 destruct (recip_find_interior' (rint_start r') (rint_end r') (rint_start r') q1 q2);
       intuition.
                  - apply rint_proper.
                  - apply Qlt_le_trans with (rint_end r); intuition.
                  - apply Qle_trans with x0; auto.
-               } 
+               }
 
                destruct H12.
                exists (RatInt q2 q1 H12).
-               split. 
+               split.
                **** apply PLT.compose_hom_rel.
                     exists r'. split; auto.
                     simpl. apply real_recip_rel_elem.
@@ -1213,7 +1213,7 @@ Proof.
                                   rewrite <- (Qplus_lt_l _ _ q2). ring_simplify.
                                   apply Qle_lt_trans with q1; auto.
                                   destruct H3; auto.
-  
+
                     ***** destruct H4.
                           apply Qlt_le_trans with q0; auto.
                           apply (Qmult_lt_l _ _ (-rint_start r')).
@@ -1257,17 +1257,17 @@ Proof.
   { unfold γ.
     apply Qmult_lt0; auto.
     simpl. apply Qmult_lt0; auto.
-  } 
+  }
   destruct (H0 a γ) as [r [??]]; auto.
   destruct (plt_hom_directed2 _ _ _ f a q r) as [r' [?[??]]]; auto.
   assert (0 < rint_start r').
   { apply rint_ord_test in H6.
     destruct H6.
     apply Qlt_le_trans with (rint_start q); auto.
-  } 
+  }
   assert (0 < rint_end r').
   { apply Qlt_le_trans with (rint_start r'); auto. apply rint_proper. }
-  assert (1 / rint_end r' <= 1 / rint_start r').  
+  assert (1 / rint_end r' <= 1 / rint_start r').
   { apply (Qmult_le_l _ _ (rint_start r')); auto.
     apply (Qmult_le_l _ _ (rint_end r')); auto.
     field_simplify.
@@ -1277,14 +1277,14 @@ Proof.
       apply (Qlt_irrefl 0); auto.
     - intro. rewrite H11 in H10.
       apply (Qlt_irrefl 0); auto.
-  } 
+  }
   exists (RatInt (1/rint_end r') (1/rint_start r') H11).
   split.
   - apply PLT.compose_hom_rel. exists r'. split; auto.
     simpl. apply real_recip_rel_elem.
     red; simpl; intros.
     destruct (recip_find_interior (rint_start r') (rint_end r') a0
-              (1/rint_start r') (1/rint_end r')) as [y [?[?[??]]]]; auto.  
+              (1/rint_start r') (1/rint_end r')) as [y [?[?[??]]]]; auto.
     + field_simplify.
       * field_simplify. reflexivity.
       * intro. rewrite H13 in H9. apply (Qlt_irrefl 0); auto.
@@ -1340,7 +1340,7 @@ Proof.
     apply real_recip_pos_converges.
     - apply realdom_lt0_opp. auto.
     - apply real_opp_converges; auto.
-  } 
+  }
   revert H1. apply realdom_converges_le.
   rewrite (cat_assoc ∂PLT).
   rewrite <- real_recip_opp.
@@ -1379,7 +1379,7 @@ Lemma real_plus_assoc A (f g h:A → PreRealDom) :
   (real_plus ∘ 《 f, real_plus ∘ 《 g, h 》 》 ≈
    real_plus ∘ 《 real_plus ∘ 《 f, g 》, h 》)%plt.
 Proof.
-  split; intros [x y] H.  
+  split; intros [x y] H.
   - apply PLT.compose_hom_rel in H. apply PLT.compose_hom_rel.
     destruct H as [[a b] [??]].
     rewrite (PLT.pair_hom_rel _ _ _ _ f (real_plus ∘ 《g,h》%plt)) in H. destruct H.
@@ -1394,9 +1394,9 @@ Proof.
       exists (a,c). split.
       * apply PLT.pair_hom_rel. split; auto.
       * simpl. apply real_plus_rel_elem. auto.
-    + simpl. apply real_plus_rel_elem. 
+    + simpl. apply real_plus_rel_elem.
       apply real_plus_rel_elem in H0. rewrite H0.
-      apply real_plus_rel_elem in H2. 
+      apply real_plus_rel_elem in H2.
       apply rint_ord_test in H2.
       simpl in H2. destruct H2.
       apply rint_ord_test.
@@ -1409,12 +1409,12 @@ Proof.
         apply Qplus_le_compat.
         ** apply Qle_refl.
         ** auto.
-  
-  - apply PLT.compose_hom_rel in H.  
+
+  - apply PLT.compose_hom_rel in H.
     destruct H as [[a b][??]].
     apply (PLT.pair_hom_rel _ _ _ _ (real_plus ∘ 《f, g》%plt) h) in H.
     destruct H.
-    apply PLT.compose_hom_rel in H.  
+    apply PLT.compose_hom_rel in H.
     destruct H as [[c d][??]].
     apply PLT.compose_hom_rel.
     apply (PLT.pair_hom_rel _ _ _ _ f g) in H. destruct H.
@@ -1479,16 +1479,16 @@ Proof.
   { unfold q1.
     rewrite <- (Qplus_lt_l _ _ (rint_start x')).
     ring_simplify. auto.
-  } 
+  }
   assert( 0 < q2 ).
   { unfold q2.
     rewrite <- (Qplus_lt_l _ _ (rint_end x')).
     ring_simplify. auto.
-  } 
+  }
   assert (q1 <= q2).
   { apply Qlt_le_weak.
     apply Qlt_trans with 0%Q; auto.
-  } 
+  }
   exists (x', RatInt q1 q2 H6).
   simpl; split.
   - apply PLT.pair_hom_rel. split; auto.
@@ -1506,7 +1506,7 @@ Proof.
     + unfold q2. ring_simplify. apply Qle_refl.
 Qed.
 
-Lemma real_opp_0_le A (h : A → PreRealDom) 
+Lemma real_opp_0_le A (h : A → PreRealDom)
   (Hh : canonical A h) :
   real_plus ∘ 《 h, real_opp ∘ h 》%plt ≤ injq 0 ∘ PLT.terminate true A.
 Proof.
@@ -1564,7 +1564,7 @@ Proof.
            *** apply rint_proper.
            *** apply Qle_trans with (rint_end z); auto.
                apply Qlt_le_weak; auto.
-  
+
       * eapply Qlt_le_trans; [ | apply H10 ].
         rewrite <- (Qplus_lt_l _ _ (- rint_end a)).
         ring_simplify.
@@ -1585,7 +1585,7 @@ Proof.
            apply Qlt_le_weak; auto.
 Qed.
 
-Lemma real_opp_0_le2 A (h : A → PreRealDom) 
+Lemma real_opp_0_le2 A (h : A → PreRealDom)
   (Hh : realdom_converges A h) :
   real_plus ∘ 《 h, real_opp ∘ h 》%plt ≥ injq 0 ∘ PLT.terminate true A.
 Proof.
@@ -1600,7 +1600,7 @@ Proof.
     - rewrite <- H2; auto.
     - rewrite <- (Qplus_lt_l _ _ (rint_start x)). ring_simplify. auto.
     - auto.
-  } 
+  }
   destruct (Hh a ε) as [z [??]]; auto.
   apply PLT.compose_hom_rel.
   exists (z, rint_opp z).
@@ -1642,7 +1642,7 @@ Lemma real_plus_reflects A (f g h:A → PreRealDom) :
   realdom_lt A (real_plus ∘ 《 f, h 》)%plt (real_plus ∘ 《 g, h 》)%plt ->
   realdom_lt A f g.
 Proof.
-  repeat intro.  
+  repeat intro.
   destruct (H a) as [x [y [?[??]]]].
   apply PLT.compose_hom_rel in H0.
   apply PLT.compose_hom_rel in H1.
@@ -1715,7 +1715,7 @@ Lemma real_mult_assoc A (f g h:A → PreRealDom) :
   (real_mult ∘ 《 f, real_mult ∘ 《 g, h 》 》 ≈
    real_mult ∘ 《 real_mult ∘ 《 f, g 》, h 》)%plt.
 Proof.
-  split; intros [x y] H.  
+  split; intros [x y] H.
   - apply PLT.compose_hom_rel in H. apply PLT.compose_hom_rel.
     destruct H as [[a b] [??]].
     rewrite (PLT.pair_hom_rel _ _ _ _ f (real_mult ∘ 《g,h》%plt)) in H. destruct H.
@@ -1730,9 +1730,9 @@ Proof.
       exists (a,c). split.
       * apply PLT.pair_hom_rel. split; auto.
       * simpl. apply real_mult_rel_elem. auto.
-    + simpl. apply real_mult_rel_elem. 
+    + simpl. apply real_mult_rel_elem.
       apply real_mult_rel_elem in H0. rewrite H0.
-      apply real_mult_rel_elem in H2. 
+      apply real_mult_rel_elem in H2.
       hnf; intros.
       apply rint_mult_correct in H4.
       destruct H4 as [q1 [q2 [?[??]]]].
@@ -1749,11 +1749,11 @@ Proof.
         rewrite H8.
         symmetry. apply Qmult_assoc.
 
-  - apply PLT.compose_hom_rel in H.  
+  - apply PLT.compose_hom_rel in H.
     destruct H as [[a b][??]].
     apply (PLT.pair_hom_rel _ _ _ _ (real_mult ∘ 《f, g》%plt) h) in H.
     destruct H.
-    apply PLT.compose_hom_rel in H.  
+    apply PLT.compose_hom_rel in H.
     destruct H as [[c d][??]].
     apply PLT.compose_hom_rel.
     apply (PLT.pair_hom_rel _ _ _ _ f g) in H. destruct H.
@@ -1820,7 +1820,7 @@ Proof.
   destruct (Hf a r) as [r' [?[??]]]; auto.
 
   destruct (Qlt_le_dec 0 (rint_start r')).
-  
+
   - set (q1 := Qmax 0 (rint_start r / rint_start r')).
     set (q2 := rint_end r / rint_end r').
     assert (q1 < 1).
@@ -1829,7 +1829,7 @@ Proof.
       compute. auto.
       apply Qlt_shift_div_r. auto.
       ring_simplify. intuition.
-    } 
+    }
     assert (1 < q2).
     { unfold q2.
       apply Qlt_shift_div_l.
@@ -1870,8 +1870,7 @@ Proof.
            *** intros.
                field_simplify.
                **** field_simplify.
-                    ***** apply Qle_refl.
-                    ***** intro. rewrite H12 in q. apply (Qlt_irrefl 0); auto.
+                    apply Qle_refl.
                **** intro. rewrite H12 in q. apply (Qlt_irrefl 0); auto.
         ** apply Qmult_le_compat; intuition.
            unfold q1.
@@ -1884,14 +1883,14 @@ Proof.
                apply Q.le_max_l.
         ** unfold q2.
            field_simplify.
-           *** field_simplify. apply Qle_refl.
+           apply Qle_refl.
            *** intro.
                apply (Qlt_irrefl 0).
                apply Qlt_le_trans with (rint_start r'); auto.
                apply Qle_trans with (rint_end r').
                **** apply rint_proper.
                **** rewrite H11. apply Qle_refl.
-  
+
   - destruct (Qlt_le_dec (rint_end r') 0).
     + set (q1 := Qmax 0 (rint_end r / rint_end r')).
       set (q2 := rint_start r / rint_start r').
@@ -1899,7 +1898,7 @@ Proof.
       assert (~rint_end r' == 0).
       { intro. apply (Qlt_irrefl 0).
         rewrite H3 in q0. auto.
-      } 
+      }
 
       assert (~rint_start r' == 0).
       { intro. apply (Qlt_irrefl 0).
@@ -1907,34 +1906,34 @@ Proof.
         apply Qle_trans with (rint_start r'); auto.
         rewrite H4; apply Qle_refl.
         apply rint_proper.
-      } 
+      }
 
       assert (q1 < 1).
       { unfold q1.
         apply Q.max_case.
         - intros. rewrite <- H5; auto.
         - compute. auto.
-        - apply Qle_lt_trans with ((-rint_end r) / (-rint_end r')). 
+        - apply Qle_lt_trans with ((-rint_end r) / (-rint_end r')).
           + field_simplify; auto. field_simplify; auto. apply Qle_refl.
-          + apply Qlt_shift_div_r. 
+          + apply Qlt_shift_div_r.
             * rewrite <- (Qplus_lt_l _ _ (rint_end r')). ring_simplify. auto.
             * ring_simplify.
-              rewrite <- (Qplus_lt_l _ _ (rint_end r')). 
-              rewrite <- (Qplus_lt_l _ _ (rint_end r)). 
+              rewrite <- (Qplus_lt_l _ _ (rint_end r')).
+              rewrite <- (Qplus_lt_l _ _ (rint_end r)).
               ring_simplify. auto.
       }
       assert (1 < q2).
       { unfold q2.
-        apply Qlt_le_trans with ((-rint_start r) / (-rint_start r')). 
+        apply Qlt_le_trans with ((-rint_start r) / (-rint_start r')).
         - apply Qlt_shift_div_l; auto.
           + rewrite <- (Qplus_lt_l _ _ (rint_start r')). ring_simplify.
             apply Qle_lt_trans with (rint_end r'); auto.
             apply rint_proper.
-          + rewrite <- (Qplus_lt_l _ _ (rint_start r')). 
-            rewrite <- (Qplus_lt_l _ _ (rint_start r)). 
+          + rewrite <- (Qplus_lt_l _ _ (rint_start r')).
+            rewrite <- (Qplus_lt_l _ _ (rint_start r)).
             ring_simplify. auto.
         - field_simplify; auto. field_simplify; auto. apply Qle_refl.
-      } 
+      }
       assert (q1 <= q2).
       { apply Qle_trans with 1%Q; intuition. }
       apply PLT.compose_hom_rel.
@@ -1977,7 +1976,7 @@ Proof.
                     assert ( (- rint_end r) / (- rint_end r') <= 0 ).
                     { field_simplify; auto.
                       field_simplify; auto.
-                    } 
+                    }
                     rewrite <- (Qmult_le_l _ _ (-rint_end r')) in H14.
                     ***** rewrite Qmult_div_r in H14.
                           ****** ring_simplify in H14.
@@ -1987,7 +1986,7 @@ Proof.
                                   rewrite H15. compute. auto.
                     ***** rewrite <- (Qplus_lt_l _ _ (rint_end r')). ring_simplify. auto.
                **** rewrite (Qmult_div_r); auto. apply Qle_refl.
-  
+
     + apply Qle_lteq in q.
       destruct q.
       * assert (~rint_start r' == 0).
@@ -2016,7 +2015,7 @@ Proof.
                  apply Qle_refl.
              - apply Qlt_shift_div_l; auto.
                ring_simplify. auto.
-           } 
+           }
            assert (q1 <= q2).
            { apply Qle_trans with 1%Q; intuition. }
 
@@ -2086,7 +2085,7 @@ Proof.
              - field_simplify; auto.
                field_simplify; auto.
                apply Qle_refl.
-           } 
+           }
            assert (q1 <= q2).
            { apply Qle_trans with 1%Q; intuition. }
 
@@ -2125,12 +2124,12 @@ Proof.
                    ***** rewrite <- H5.
                          ring_simplify.
                          apply Qle_trans with (rint_end r'); intuition.
-  
+
       * apply Qle_lteq in q0.
         destruct q0.
         ** assert (~rint_end r' == 0).
            { intro. apply (Qlt_irrefl 0). rewrite H5 in H4. auto. }
-        
+
            set (q1 := 0%Q).
            set (q2 := rint_end r / rint_end r').
 
@@ -2140,7 +2139,7 @@ Proof.
            { unfold q2.
              apply Qlt_shift_div_l; auto.
              ring_simplify. auto.
-           } 
+           }
            assert (q1 <= q2).
            { apply Qle_trans with 1%Q; intuition. }
 
@@ -2177,7 +2176,7 @@ Proof.
                           field_simplify; auto.
                           field_simplify; auto.
                           apply Qle_refl.
-  
+
         ** destruct (Hf a r') as [r'' [??]]; auto.
            destruct H6.
            exfalso. apply (Qlt_irrefl 0).
@@ -2245,7 +2244,7 @@ Proof.
           simpl in H19.
           apply injq_rel_elem in H19.
           destruct H19. intuition.
-  } 
+  }
   destruct H11 as [z' [?[??]]].
   assert (rint_end p1 * z' < rint_start q1 * z').
   { destruct (H4 (rint_end p1 * z')).
@@ -2263,7 +2262,7 @@ Proof.
         split.
         * split.
           ** apply Qle_refl.
-          ** apply rint_proper. 
+          ** apply rint_proper.
         * split; auto.
           reflexivity.
       + apply Qle_lt_trans with (rint_end p); auto.
@@ -2278,10 +2277,10 @@ Qed.
   *)
 
 Lemma real_distrib_le A (x y z: A → PreRealDom) :
-  (real_plus ∘ 《 real_mult ∘ 《 x, y 》 
-              , real_mult ∘ 《 x, z 》 
+  (real_plus ∘ 《 real_mult ∘ 《 x, y 》
+              , real_mult ∘ 《 x, z 》
               》
-   ≤ 
+   ≤
   real_mult ∘ 《 x, real_plus ∘ 《 y, z 》 》)%plt.
 Proof.
   hnf; simpl; intros [a r] H.
@@ -2329,16 +2328,16 @@ Qed.
 (** Probably this lemma can be improved to require only that
     x converges...
   *)
-Lemma real_distrib_eq A (x y z: A → PreRealDom) 
-  (Hx0 : canonical A x) 
-  (Hy0 : canonical A y) 
+Lemma real_distrib_eq A (x y z: A → PreRealDom)
+  (Hx0 : canonical A x)
+  (Hy0 : canonical A y)
   (Hz0 : canonical A z)
-  (Hx : realdom_converges A x) 
-  (Hy : realdom_converges A y) 
+  (Hx : realdom_converges A x)
+  (Hy : realdom_converges A y)
   (Hz : realdom_converges A z) :
 
-  (real_plus ∘ 《 real_mult ∘ 《 x, y 》 
-              , real_mult ∘ 《 x, z 》 
+  (real_plus ∘ 《 real_mult ∘ 《 x, y 》
+              , real_mult ∘ 《 x, z 》
               》
   ≈
   real_mult ∘ 《 x, real_plus ∘ 《 y, z 》 》)%plt.
@@ -2353,10 +2352,10 @@ Proof.
 Qed.
 
 (*
-Lemma real_distrib_le2 A (x y z: A → PreRealDom) 
+Lemma real_distrib_le2 A (x y z: A → PreRealDom)
   (Hx : realdom_converges A x) :
-  (real_plus ∘ 《 real_mult ∘ 《 x, y 》 
-              , real_mult ∘ 《 x, z 》 
+  (real_plus ∘ 《 real_mult ∘ 《 x, y 》
+              , real_mult ∘ 《 x, z 》
               》
    ≥
   real_mult ∘ 《 x, real_plus ∘ 《 y, z 》 》)%plt.
@@ -2374,7 +2373,7 @@ Admitted.
      (* ?? how to choose a small enough ε so we can use the fact that x
              converges to complete this proof?  Perhaps we also need that
              y and z are  canonical?
-        *) 
+        *)
 *)
 (*
   apply PLT.compose_hom_rel.
@@ -2399,7 +2398,7 @@ Admitted.
   destruct H5 as [w [u [?[??]]]].
   apply H0.
   apply rint_mult_correct.
-  
+
 
 
 Qed.
@@ -2441,7 +2440,7 @@ Proof.
       { intros. destruct H1. destruct H5. split.
         - apply Qlt_le_trans with (rint_start r'); auto.
         - apply Qle_lt_trans with (rint_end r'); auto.
-      } 
+      }
       apply H2.
 
       destruct (plt_hom_directed2 _ _ _ x a x1 x') as [q [?[??]]]; auto.
@@ -2498,14 +2497,14 @@ Proof.
   - red; intros. destruct a. simpl.
     assert (rint_start x - (2#1) < rint_start x - 1).
     { rewrite <- (Qplus_lt_l _ _ (2#1)%Q).
-      ring_simplify.    
+      ring_simplify.
       rewrite Qplus_comm.
       apply Qle_lt_trans with (0 + rint_start x)%Q.
       - ring_simplify. apply Qle_refl.
       - apply Qplus_lt_le_compat.
         * compute. auto.
         * apply Qle_refl.
-    } 
+    }
     assert (rint_start x - 1 < rint_start x - (1#2)).
     { rewrite <- (Qplus_lt_l _ _ 1).
       ring_simplify.
@@ -2515,7 +2514,7 @@ Proof.
       - apply Qplus_lt_le_compat.
         + compute. auto.
         + apply Qle_refl.
-    } 
+    }
     assert (rint_start x - (2#1) <= rint_start x - (1#2)).
     { apply Qlt_le_weak. eapply Qlt_trans; eauto. }
     exists (RatInt _ _ H4), x.
@@ -2537,7 +2536,7 @@ Proof.
       apply Qplus_lt_le_compat.
       + compute. auto.
       + apply Qle_refl.
-    } 
+    }
     assert (rint_end x + 1 < rint_end x + (2#1)%Q).
     { rewrite Qplus_comm.
       rewrite (Qplus_comm _ (2#1)).
@@ -2598,7 +2597,7 @@ Proof.
       * rewrite <- (Qplus_lt_l _ _ (-q)).
         rewrite <- (Qplus_lt_l _ _ (rint_start c0)).
         ring_simplify. apply H.
-  
+
     + simpl. apply real_opp_rel_elem.
       apply rint_ord_test. simpl.
       rewrite Qopp_involutive.
@@ -2639,7 +2638,7 @@ Proof.
     { apply Qle_trans with q1; auto.
       - apply Qlt_le_weak; auto.
       - apply Qlt_le_weak; auto.
-    } 
+    }
     assert (q2 < q2 + 1).
     { rewrite Qplus_comm.
       apply Qle_lt_trans with (0 + q2)%Q.
@@ -2647,12 +2646,12 @@ Proof.
       - apply Qplus_lt_le_compat.
         + compute. auto.
         + apply Qle_refl.
-    } 
+    }
     assert (q2' <= q2+1).
     { apply Qle_trans with q2; auto.
       - apply Qlt_le_weak; auto.
       - apply Qlt_le_weak; auto.
-    } 
+    }
     exists (RatInt (q1-1) q1' H7), (RatInt q2' (q2+1) H9).
     repeat split; simpl.
     + apply injq_rel_elem. split; simpl; auto.
@@ -2663,7 +2662,7 @@ Qed.
 Lemma Q_real_le_compat (q1 q2:Q) :
   realdom_le 1%plt (injq q1) (injq q2) <-> q1 <= q2.
 Proof.
-  split; intros.  
+  split; intros.
   - red in H.
   destruct (Qlt_le_dec q2 q1); auto.
   exfalso.
@@ -2682,7 +2681,7 @@ Proof.
         apply Qlt_le_weak; auto.
       }
       red in H5. omega.
-  
+
   - red; intros.
     set (ε' := ε / (3#1)).
     assert (0 < ε').
@@ -2690,7 +2689,7 @@ Proof.
       apply Qlt_shift_div_l.
       - compute. auto.
       - ring_simplify. auto.
-    } 
+    }
     assert (q1 < ε' + q1).
     { apply Qle_lt_trans with (0 + q1)%Q.
       - ring_simplify. apply Qle_refl.
@@ -2700,18 +2699,18 @@ Proof.
     { rewrite <- (Qplus_lt_l _ _ ε').
       ring_simplify.
       rewrite Qplus_comm. auto.
-    } 
+    }
     assert (q2 < ε' + q2).
     { apply Qle_lt_trans with (0 + q2)%Q.
       - ring_simplify. apply Qle_refl.
       - apply Qplus_lt_le_compat; auto. apply Qle_refl.
-    } 
+    }
     assert (q2 - ε' < q2).
     { rewrite <- (Qplus_lt_l _ _ ε').
       ring_simplify.
       rewrite Qplus_comm. auto.
-    } 
-    assert (q1 - ε' <= ε' + q1).  
+    }
+    assert (q1 - ε' <= ε' + q1).
     { apply Qle_trans with q1; apply Qlt_le_weak; auto. }
     assert (q2 - ε' <= ε' + q2).
     { apply Qle_trans with q2; apply Qlt_le_weak; auto. }
@@ -2777,7 +2776,7 @@ Proof.
           + rewrite <- (Qplus_le_l _ _ ε).
             ring_simplify. apply Qlt_le_weak; auto.
           + apply Qlt_le_weak; auto.
-      } 
+      }
       assert (q + ε < q1 + q2).
       { rewrite <- (Qmult_lt_r _ _ (2#1)); [ | compute; auto ].
         unfold ε. field_simplify.
@@ -2803,7 +2802,7 @@ Proof.
           apply Qle_lt_trans with (0 + q)%Q.
           + ring_simplify. apply Qle_refl.
           + apply Qplus_lt_le_compat; auto. apply Qle_refl.
-      } 
+      }
       apply H3 in H4.
       apply PLT.compose_hom_rel in H4.
       destruct H4 as [[z w] [??]].
@@ -2818,7 +2817,7 @@ Proof.
       { eapply Qle_lt_trans. apply H6.
         eapply Qlt_le_trans. apply H2.
         apply Qplus_le_compat; apply Qlt_le_weak; auto.
-      } 
+      }
       red in H10. omega.
 
     + destruct (Qlt_le_dec (q1+q2) q).
@@ -2830,7 +2829,7 @@ Proof.
           - reflexivity.
           - rewrite <- (Qplus_lt_l _ _ (q1+q2)).
             ring_simplify. auto.
-        } 
+        }
         assert (q - ε <= q + ε).
         { apply Qplus_le_compat.
           apply Qle_refl.
@@ -2848,7 +2847,7 @@ Proof.
           - apply Qlt_le_trans with (q+q)%Q.
             + apply Qplus_lt_le_compat; auto. apply Qle_refl.
             + field_simplify. apply Qle_refl.
-        } 
+        }
         destruct H.
         assert ((tt,(RatInt  _ _ H1)) ∈ PLT.hom_rel (injq q)).
         { simpl. apply injq_rel_elem.
@@ -2863,7 +2862,7 @@ Proof.
             apply Qle_lt_trans with (0 + q)%Q.
             + ring_simplify. apply Qle_refl.
             + apply Qplus_lt_le_compat; auto. apply Qle_refl.
-        } 
+        }
         apply H3 in H4.
         apply PLT.compose_hom_rel in H4.
         destruct H4 as [[z w] [??]].
@@ -2883,12 +2882,12 @@ Proof.
             + apply Qplus_le_compat; apply Qlt_le_weak; auto.
             + apply Qle_refl.
           - auto.
-        } 
+        }
         red in H10. omega.
 
       * apply Qle_antisym; auto.
 
-  
+
   - split; intros [u a] H0.
     + apply PLT.compose_hom_rel in H0.
       destruct H0 as [[b c][??]].
@@ -2911,7 +2910,7 @@ Proof.
         eapply Qlt_trans.
         apply Qplus_lt_l. apply H3.
         apply Qplus_lt_r. apply H4.
-  
+
     + simpl in H0.
       apply injq_rel_elem in H0.
       apply PLT.compose_hom_rel.
@@ -2928,7 +2927,7 @@ Proof.
             ring_simplify. auto.
           + rewrite <- (Qplus_lt_l _ _ q).
             ring_simplify. auto.
-      } 
+      }
       assert (q1 - ε <= q1 + ε).
       { apply Qle_trans with q1.
         - rewrite <- (Qplus_le_l _ _ ε).
@@ -2943,7 +2942,7 @@ Proof.
           + apply Qplus_le_compat.
             * apply Qle_refl.
             * apply Qlt_le_weak; auto.
-      } 
+      }
       assert (q2 - ε <= q2 + ε).
       { apply Qle_trans with q2.
         - rewrite <- (Qplus_le_l _ _ ε).
@@ -2958,8 +2957,8 @@ Proof.
           + apply Qplus_le_compat.
             * apply Qle_refl.
             * apply Qlt_le_weak; auto.
-      } 
-      exists (RatInt _ _ H3, RatInt _ _ H4).    
+      }
+      exists (RatInt _ _ H3, RatInt _ _ H4).
       split; simpl.
       * apply PLT.pair_hom_rel; split; simpl.
         ** apply injq_rel_elem.
@@ -3009,7 +3008,7 @@ Proof.
                apply Qle_trans with (rint_start a + (q - rint_start a))%Q.
                **** apply Qplus_le_compat. apply Qle_refl. auto.
                **** ring_simplify. apply Qle_refl.
-  
+
         ** apply Qle_trans with (q + (2#1)*ε)%Q.
            *** rewrite <- H. ring_simplify. apply Qle_refl.
            *** unfold ε.
@@ -3046,7 +3045,7 @@ Lemma Q_real_mult_compat (q q1 q2:Q) :
 Proof.
   split; intros.
   - destruct H.
-    destruct (Qcompare_spec (q1*q2) q); auto. 
+    destruct (Qcompare_spec (q1*q2) q); auto.
     + exfalso.
       destruct (Q_dense (q1*q2) q) as [q' [??]]; auto.
       assert (q' <= q + 1).
@@ -3054,17 +3053,17 @@ Proof.
         apply Qle_trans with (q + 0)%Q.
         - ring_simplify. apply Qle_refl.
         - apply Qplus_le_compat. apply Qle_refl. compute. discriminate.
-      } 
+      }
       assert ((tt,RatInt q' (q+1) H4) ∈ PLT.hom_rel (injq q)).
       { simpl. apply injq_rel_elem.
         split; simpl; auto.
         apply Qle_lt_trans with (0 + q)%Q.
         - ring_simplify. apply Qle_refl.
         - rewrite (Qplus_comm q 1).
-          apply Qplus_lt_le_compat. 
+          apply Qplus_lt_le_compat.
           + compute. auto.
-          + apply Qle_refl. 
-      } 
+          + apply Qle_refl.
+      }
       apply H0 in H5.
       apply PLT.compose_hom_rel in H5.
       destruct H5 as [[a b] [??]].
@@ -3081,7 +3080,7 @@ Proof.
         exists q1. exists q2. intuition.
         - destruct H5; split; intuition.
         - destruct H7; split; intuition.
-      } 
+      }
       destruct H8; simpl in *.
       apply (Qlt_irrefl (q1*q2)).
       apply Qlt_le_trans with q'; auto.
@@ -3094,7 +3093,7 @@ Proof.
         apply Qle_trans with (q + 0)%Q.
         - ring_simplify. apply Qle_refl.
         - apply Qplus_le_compat. apply Qle_refl. compute. discriminate.
-      } 
+      }
       assert ((tt,RatInt (q-1) q' H4) ∈ PLT.hom_rel (injq q)).
       { simpl. apply injq_rel_elem.
         split; simpl; auto.
@@ -3102,10 +3101,10 @@ Proof.
         apply Qle_lt_trans with (0 + q)%Q.
         - ring_simplify. apply Qle_refl.
         - rewrite (Qplus_comm q 1).
-          apply Qplus_lt_le_compat. 
+          apply Qplus_lt_le_compat.
           + compute. auto.
-          + apply Qle_refl. 
-      } 
+          + apply Qle_refl.
+      }
       apply H0 in H5.
       apply PLT.compose_hom_rel in H5.
       destruct H5 as [[a b] [??]].
@@ -3122,7 +3121,7 @@ Proof.
         exists q1. exists q2. intuition.
         - destruct H5; split; intuition.
         - destruct H7; split; intuition.
-      } 
+      }
       destruct H8; simpl in *.
       apply (Qlt_irrefl (q1*q2)).
       apply Qle_lt_trans with q'; auto.
@@ -3175,7 +3174,7 @@ Proof.
         intros [??]; split.
         - eapply Qle_lt_trans; eauto.
         - eapply Qlt_le_trans; eauto.
-      } 
+      }
       apply rint_mult_correct_interior with q1 q2; auto.
       symmetry; auto.
 Qed.
@@ -3211,7 +3210,7 @@ Proof.
            - rewrite (cat_ident1 ∂PLT). auto.
            - apply cat_respects; auto.
              apply terminate_1_univ.
-         } 
+         }
          rewrite <- H1.
          apply Q_real_lt_compat. auto.
 
@@ -3258,7 +3257,7 @@ Proof.
         + apply cat_respects; auto.
           symmetry. apply terminate_1_univ.
         + apply cat_ident1.
-    } 
+    }
     destruct a.
     destruct (H1 u r) as [r' [??]]; auto.
     apply PLT.compose_hom_rel in H2.
@@ -3279,7 +3278,7 @@ Proof.
         rewrite H6.
         rewrite Qmult_inv_r; auto.
         reflexivity.
-      } 
+      }
       red.
       rewrite <- H7. auto.
 Qed.

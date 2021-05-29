@@ -42,7 +42,7 @@ Program Definition effective_Nord : effective_order Ndisc_ord
   := EffectiveOrder Ndisc_ord _ (fun n => Some n) _.
 Next Obligation.
   simpl. unfold Preord.ord_op. simpl.
-  apply N_eq_dec.
+  apply N.eq_dec.
 Qed.
 Next Obligation.
   intros. exists x. auto.
@@ -59,12 +59,12 @@ Qed.
      choice then suffices to choose the index.
   *)
 
-Definition unenumerate_set (A:preord) (Heff:effective_order A) (x:A) 
+Definition unenumerate_set (A:preord) (Heff:effective_order A) (x:A)
   : eset A :=
-  fun n => 
+  fun n =>
     match eff_enum A Heff n with
-    | Some x' => 
-        if PREORD_EQ_DEC A (eff_to_ord_dec A Heff) x x' 
+    | Some x' =>
+        if PREORD_EQ_DEC A (eff_to_ord_dec A Heff) x x'
            then Some x'
            else None
     | None => None
@@ -83,17 +83,17 @@ Proof.
     destruct (PREORD_EQ_DEC A (eff_to_ord_dec A Heff) x c); auto.
   - rewrite H0 in H. elim H.
 Qed.
-  
+
 Definition unenumerate (A:preord) (Heff:effective_order A) (x:A) : N :=
   proj1_sig (projT2
     (find_inhabitant A
       (unenumerate_set A Heff x)
       (unenumerate_set_inhabited A Heff x))).
-  
+
 Lemma unenumerate_correct A Heff x :
   exists x', eff_enum A Heff (unenumerate A Heff x) = Some x' /\ x ≈ x'.
 Proof.
-  unfold unenumerate. 
+  unfold unenumerate.
   destruct (find_inhabitant A
                (unenumerate_set A Heff x)
                (unenumerate_set_inhabited A Heff x)); simpl.
@@ -118,7 +118,7 @@ Lemma unenumerate_uniq A Heff x x' :
   unenumerate A Heff x = unenumerate A Heff x'.
 Proof.
   intros.
-  unfold unenumerate. 
+  unfold unenumerate.
   destruct (find_inhabitant A
                (unenumerate_set A Heff x)
                (unenumerate_set_inhabited A Heff x)); simpl.
