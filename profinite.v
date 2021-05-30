@@ -902,16 +902,16 @@ Arguments PLT.effective [hf] X.
 Arguments PLT.plotkin [hf] X.
 Arguments PLT.ord [hf] X.
 Arguments PLT.dec [hf] X.
-Arguments PLT.pi1 [hf] [A] [B].
-Arguments PLT.pi2 [hf] [A] [B].
+Arguments PLT.pi1 {hf A B}.
+Arguments PLT.pi2 {hf A B}.
 Arguments PLT.pair [hf] [C] [A] [B] f g.
-Arguments PLT.iota1 [hf] [A] [B].
-Arguments PLT.iota2 [hf] [A] [B].
+Arguments PLT.iota1 {hf A B}.
+Arguments PLT.iota2 {hf A B}.
 Arguments PLT.sum_cases [hf] [C] [A] [B] f g.
 Arguments PLT.prod [hf] A B.
 Arguments PLT.sum [hf] A B.
 Arguments PLT.exp [hf] A B.
-Arguments PLT.app [hf A B].
+Arguments PLT.app {hf A B}.
 Arguments PLT.curry [hf C A B] f.
 Arguments PLT.pair_map [hf] [A B C D] f g.
 

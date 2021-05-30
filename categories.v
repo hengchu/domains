@@ -1321,9 +1321,9 @@ Arguments Functor.ob_map [C] [D] f X.
 Arguments Functor.hom_map [C] [D] f A B f0.
 Arguments Functor.Functor C D _ _ _ _ _.
 Arguments Functor.functor C D.
-Arguments Functor.ident [C] [D] f A f0 _.
-Arguments Functor.compose [C] [D] f A B C0 f0 g h _.
-Arguments Functor.respects [C] [D] f A B f0 g _.
+Arguments Functor.ident [C] [D] f A _ _.
+Arguments Functor.compose [C] [D] f A B _ _ g h _.
+Arguments Functor.respects [C] [D] f A B _ g _.
 
 Notation functor := Functor.functor.
 Notation Functor := Functor.Functor.

@@ -939,7 +939,7 @@ Section normal_sets.
     unfold norm_closure in *.
     destruct (check_inh M).
     - destruct a. subst.
-      destruct H. apply H0 in H.
+      rewrite H3 in H. destruct H. apply H0 in H.
       apply nil_elem in H. elim H.
     - destruct (Hnorm M i) as [Q [??]].
       destruct (normal_set_mub_closure Q n M i i0).

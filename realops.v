@@ -1,5 +1,6 @@
 Require Import QArith.
 Require Import Setoid.
+Require Import Psatz.
 
 Require Import basics.
 Require Import preord.
@@ -373,9 +374,9 @@ Program Definition real_plus : (PreRealDom ⊗ PreRealDom)%plt → PreRealDom :=
   PLT.Hom true (PreRealDom ⊗ PreRealDom)%plt PreRealDom real_plus_rel _ _.
 Next Obligation.
   intros.
-  destruct x. destruct x'.
+  destruct y. destruct y'.
   rewrite real_plus_rel_elem in H1. rewrite real_plus_rel_elem.
-  transitivity y; auto.
+  transitivity {| rint_start := rint_start; rint_end := rint_end; rint_proper := rint_proper |}; auto.
   rewrite H1.
   destruct H. simpl in *.
   apply rint_ord_test. simpl.
@@ -487,9 +488,9 @@ Program Definition real_mult : (PreRealDom ⊗ PreRealDom)%plt → PreRealDom :=
   PLT.Hom true (PreRealDom ⊗ PreRealDom)%plt PreRealDom real_mult_rel _ _.
 Next Obligation.
   intros.
-  destruct x. destruct x'.
+  destruct y. destruct y'.
   rewrite real_mult_rel_elem in H1. rewrite real_mult_rel_elem.
-  transitivity y; auto.
+  transitivity {| rint_start := rint_start; rint_end := rint_end; rint_proper := rint_proper |}; auto.
   rewrite H1.
   hnf; intros.
   apply rint_mult_correct in H2.
@@ -2680,7 +2681,7 @@ Proof.
         apply Qplus_lt_le_compat; auto.
         apply Qlt_le_weak; auto.
       }
-      red in H5. omega.
+      red in H5. lia. 
 
   - red; intros.
     set (ε' := ε / (3#1)).
@@ -2818,7 +2819,7 @@ Proof.
         eapply Qlt_le_trans. apply H2.
         apply Qplus_le_compat; apply Qlt_le_weak; auto.
       }
-      red in H10. omega.
+      red in H10. lia.
 
     + destruct (Qlt_le_dec (q1+q2) q).
       * exfalso.
@@ -2883,7 +2884,7 @@ Proof.
             + apply Qle_refl.
           - auto.
         }
-        red in H10. omega.
+        red in H10. lia.
 
       * apply Qle_antisym; auto.
 
@@ -3026,6 +3027,8 @@ Proof.
                     ring_simplify. apply Qle_refl.
 Qed.
 
+Close Scope Q.
+
 Lemma terminate_1_univ :
   id(1) ≈ PLT.terminate true 1.
 Proof.
@@ -3039,16 +3042,15 @@ Proof.
     apply ident_elem. hnf. auto.
 Qed.
 
-
 Lemma Q_real_mult_compat (q q1 q2:Q) :
-  (real_mult ∘ 《 injq q1, injq q2 》 ≈ injq q)%plt <-> q1 * q2 == q.
+  (real_mult ∘ 《 injq q1, injq q2 》 ≈ injq q)%plt <-> (q1 * q2 == q)%Q.
 Proof.
   split; intros.
   - destruct H.
     destruct (Qcompare_spec (q1*q2) q); auto.
     + exfalso.
       destruct (Q_dense (q1*q2) q) as [q' [??]]; auto.
-      assert (q' <= q + 1).
+      assert (q' <= q + 1)%Q.
       { apply Qle_trans with q; intuition.
         apply Qle_trans with (q + 0)%Q.
         - ring_simplify. apply Qle_refl.
@@ -3087,7 +3089,7 @@ Proof.
 
     + exfalso.
       destruct (Q_dense q (q1*q2)) as [q' [??]]; auto.
-      assert (q-1 <= q').
+      assert (q-1 <= q')%Q.
       { apply Qle_trans with q; intuition.
         rewrite <- (Qplus_le_l _ _ 1). ring_simplify.
         apply Qle_trans with (q + 0)%Q.
@@ -3180,7 +3182,7 @@ Proof.
 Qed.
 
 
-Lemma Q_real_recip_compat (q:Q) : (q == 0%Q -> False) ->
+Lemma Q_real_recip_compat (q:Q) : (q == 0%Q -> False)%Q ->
   real_recip ∘ injq q ≈ injq (Qinv q).
 Proof.
   intros.
@@ -3273,7 +3275,7 @@ Proof.
       rewrite <- way_inside_alt in H3.
       apply H3.
 
-      assert (a' == /q).
+      assert (a' == /q)%Q.
       { apply (Qmult_inj_l a' (/q) q); auto.
         rewrite H6.
         rewrite Qmult_inv_r; auto.
