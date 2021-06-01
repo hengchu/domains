@@ -938,7 +938,10 @@ Section normal_sets.
     repeat intro.
     unfold norm_closure in *.
     destruct (check_inh M).
-    - destruct a. subst.
+    - destruct a.
+      match goal with
+      | [ H_hf: hf = true |- _ ] => rewrite H_hf in H
+      end.
       destruct H. apply H0 in H.
       apply nil_elem in H. elim H.
     - destruct (Hnorm M i) as [Q [??]].

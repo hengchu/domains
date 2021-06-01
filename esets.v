@@ -149,10 +149,10 @@ Section countable_ID.
   (** Here we define inhabitedness of an enumerable set as an inductive
       predicate with a single constructor.  This enables us to define
       a constructive choice function on inhabited enumerable sets.
-    *)
+   *)
   Inductive einhabited (P:eset A) : Prop :=
     | einh :
-        (P N0 = None -> einhabited (fun n => P (Nsucc n))) ->
+        (P N0 = None -> einhabited (fun n => P (N.succ n))) ->
         einhabited P.
 
   Lemma member_inhabited : forall (P:eset A), (exists a, a ∈ P) -> einhabited P.
@@ -184,12 +184,12 @@ Section countable_ID.
     case (P N0).
     - intros a HP. exists a. exists N0.
       split; auto.
-      intros. 
+      intros.
       intros. compute. destruct n'; discriminate.
     - intros HP. case (find_inhabitant _ (H' HP)).
       intros x Hx. clear find_inhabitant.
       case Hx as [n ?].
-      exists x. exists (N.succ n). 
+      exists x. exists (N.succ n).
       destruct a.
       split; auto.
       intros.
@@ -212,7 +212,7 @@ Global Opaque find_inhabitant.
   Lemma choose_elem : forall P H, (choose P H) ∈ P.
   Proof.
     intros. unfold choose. destruct (find_inhabitant); auto.
-    simpl. destruct s as [n ?]. exists n. 
+    simpl. destruct s as [n ?]. exists n.
     destruct a. rewrite H0; auto.
   Qed.
 
@@ -251,7 +251,7 @@ Arguments elist {A} l _.
      elements.
   *)
 Definition intersection {A:preord} (eqdec:forall x y:A, {x ≈ y}+{x ≉ y}) (P Q:eset A) : eset A :=
-    fun n => let (p,q) := unpairing n in 
+    fun n => let (p,q) := unpairing n in
        match P p, Q q with
        | Some x, Some y => if eqdec x y then Some x else None
        | _, _ => None
@@ -367,7 +367,7 @@ Proof.
       * rewrite H0 in H. elim H.
     + destruct p.
       * case_eq (Q (N.pos p)); intros.
-        ** rewrite H0 in H. 
+        ** rewrite H0 in H.
            exists (Npos p). rewrite H0. apply H.
         ** rewrite H0 in H. elim H.
       * case_eq (P (Npos p)); intros.
@@ -467,7 +467,7 @@ Proof.
     + simpl in H. destruct H; subst.
       * exists N0. simpl. auto.
       * destruct IHl as [n ?]; auto.
-        exists (Nsucc n).
+        exists (N.succ n).
         unfold elist.
         rewrite N2Nat.inj_succ. simpl.
         auto.
@@ -495,7 +495,7 @@ Proof.
     + elim H.
 
   - destruct H as [[p Hp] [q Hq]].
-    exists (pairing (p,q)).    
+    exists (pairing (p,q)).
     unfold intersection.
     rewrite unpairing_pairing.
     destruct (P p); intuition.
@@ -538,7 +538,7 @@ Qed.
 Lemma choose_finset_in : forall A X (Q:finset A),
   Q ⊆ X -> exists n, exists z, choose_finset A X n z ≈ Q.
 Proof.
-  intros. induction Q. 
+  intros. induction Q.
   - exists 0. exists N0. simpl; auto.
   - destruct IHQ as [n [z ?]].
     + apply incl_trans with finset_theory (a::Q); auto.
@@ -548,7 +548,7 @@ Proof.
     + assert (a ∈ X).
       { apply H.
         exists a. split; simpl; auto.
-      } 
+      }
       destruct H1 as [p ?].
       exists (S n). exists (pairing (p,z)).
       simpl.
@@ -560,9 +560,9 @@ Proof.
            *** exists a. split; simpl; eauto.
            *** destruct H0.
                destruct (H0 b).
-               exists b; split; auto.  
+               exists b; split; auto.
                destruct H5.
-               exists x.  
+               exists x.
                split; simpl; eauto.
         ** destruct H2 as [b [??]].
            simpl in H2; intuition subst.
@@ -580,7 +580,7 @@ Definition finsubsets A (X:eset A) : eset (finset A) :=
   fun n => let (p,q) := unpairing n in Some (choose_finset A X (N.to_nat p) q).
 
 Definition ne_finsubsets A (X:eset A) : eset (finset A) :=
-  fun n => 
+  fun n =>
     let (p,q) := unpairing n in
     let l := choose_finset A X (N.to_nat p) q in
     match l with
@@ -676,8 +676,8 @@ Program Definition semidec_true : semidec True
   := Semidec _ (single tt) _.
 Next Obligation.
   intros; split; auto.
-  intro. 
-  apply single_axiom. 
+  intro.
+  apply single_axiom.
   auto.
 Qed.
 
@@ -703,9 +703,9 @@ Next Obligation.
     right. apply decset_correct. auto.
 Qed.
 
-Program Definition semidec_conj (P Q:Prop) (HP:semidec P) (HQ:semidec Q) 
+Program Definition semidec_conj (P Q:Prop) (HP:semidec P) (HQ:semidec Q)
   : semidec (P /\ Q)
-  := Semidec _ (intersection (PREORD_EQ_DEC _ unitpo_dec) 
+  := Semidec _ (intersection (PREORD_EQ_DEC _ unitpo_dec)
                      (decset P HP) (decset Q HQ)) _.
 Next Obligation.
   intros; split; intros.
@@ -737,7 +737,7 @@ Qed.
 Lemma semidec_in (A:preord) (HA:ord_dec A) (X:eset A) x :
   semidec (x ∈ X).
 Proof.
-  apply Semidec with (image (const tt) 
+  apply Semidec with (image (const tt)
     (intersection (PREORD_EQ_DEC A HA) X (eset.esingle A x))).
   split; intros.
   - apply image_axiom2 in H.
@@ -773,7 +773,7 @@ Fixpoint all_finset_setdec
                 (DECSET x) (all_finset_setdec A DECSET xs)
   end.
 
-Program Definition all_finset_semidec {A:preord} (P:A -> Prop) 
+Program Definition all_finset_semidec {A:preord} (P:A -> Prop)
   (Hok : forall a b, a ≈ b -> P a -> P b)
   (H:forall a, semidec (P a)) (X:finset A)
   : semidec (forall a:A, a ∈ X -> P a)
@@ -809,7 +809,7 @@ Fixpoint ex_finset_setdec
   | x::xs => union2 (DECSET x) (ex_finset_setdec A DECSET xs)
   end.
 
-Program Definition ex_finset_semidec {A:preord} (P:A -> Prop) 
+Program Definition ex_finset_semidec {A:preord} (P:A -> Prop)
   (Hok:forall a b, a ≈ b -> P a -> P b)
   (H:forall a, semidec (P a))
   (X:finset A)
@@ -842,12 +842,12 @@ Qed.
 Definition eimage' (A B:preord) (f:A -> B) (P:eset A) : eset B :=
   fun n => match P n with None => None | Some x => Some (f x) end.
 
-Program Definition esubset {A:preord} (P:A -> Prop) 
+Program Definition esubset {A:preord} (P:A -> Prop)
   (H:forall a, semidec (P a)) (X:eset A) :=
-  eset.eunion A 
+  eset.eunion A
     (eimage' _ _ (fun x => eimage' _ _ (fun _ => x) (decset (P x) (H x))) X).
 
-Lemma esubset_elem (A:preord) (P:A->Prop) (dec:forall a, semidec (P a)) 
+Lemma esubset_elem (A:preord) (P:A->Prop) (dec:forall a, semidec (P a))
   (Hok:forall a b, a ≈ b -> P a -> P b)
   X x :
   x ∈ esubset P dec X <-> (x ∈ X /\ P x).
@@ -909,7 +909,7 @@ Proof.
            assert (P c).
            { rewrite <- (decset_correct _ (dec c)).
              exists m. rewrite H2. destruct c0; auto.
-           } 
+           }
            assert (P x).
            { apply Hok with c; auto. }
            rewrite <- (decset_correct _ (dec x)) in H4.
@@ -932,7 +932,7 @@ Definition esubset_dec (A:preord) (P:A -> Prop) (dec:forall x:A, {P x}+{~P x})
   (X:eset A) : eset A :=
   fun n => match X n with
            | None => None
-           | Some a => 
+           | Some a =>
                match dec a with
                | left H => Some a
                | right _ => None
@@ -942,7 +942,7 @@ Definition esubset_dec (A:preord) (P:A -> Prop) (dec:forall x:A, {P x}+{~P x})
 Lemma esubset_dec_elem : forall (A:preord) (P:A->Prop) dec X x,
   (forall x y, x ≈ y -> P x -> P y) ->
   (x ∈ esubset_dec A P dec X <-> (x ∈ X /\ P x)).
-Proof.  
+Proof.
   intros. split; intros.
   - red in H0. simpl in H0.
     destruct H0 as [n ?].
@@ -975,7 +975,7 @@ Definition erel_image (A B:preord) (dec : ord_dec A) (R:erel A B) (x:A) : eset B
 
 Lemma erel_image_elem : forall A B dec R x y,
   y ∈ erel_image A B dec R x <-> (x,y) ∈ R.
-Proof.  
+Proof.
   intros. split; intros.
 
   - unfold erel_image in H.
@@ -1001,7 +1001,7 @@ Proof.
     + split; auto.
 Qed.
 
-Definition erel_inv_image 
+Definition erel_inv_image
   (A B:preord) (dec : ord_dec B) (R:erel A B) (y:B) : eset A :=
   image π₁ (esubset_dec (A×B)
                     (fun p => π₂#p ≈ y)
@@ -1009,7 +1009,7 @@ Definition erel_inv_image
 
 Lemma erel_inv_image_elem : forall A B dec R x y,
   x ∈ erel_inv_image A B dec R y <-> (x,y) ∈ R.
-Proof.  
+Proof.
   intros. split; intros.
 
   - unfold erel_inv_image in H.
@@ -1021,7 +1021,7 @@ Proof.
       { destruct p; simpl in *.
         destruct H1; destruct H0.
         split; split; auto.
-      } 
+      }
       rewrite <- H2; auto.
     + intros. rewrite <- H2; auto.
   - unfold erel_inv_image.
@@ -1032,7 +1032,7 @@ Proof.
     + split; auto.
 Qed.
 
-(** * Weak countable choice 
+(** * Weak countable choice
 
      Countable indefinite description gives rise to a functional choice principle:
        "Every total enumerable relation gives rise to a (computable) function."
