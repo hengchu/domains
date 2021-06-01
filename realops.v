@@ -370,13 +370,15 @@ Proof.
     + apply rint_ord_test in H1; destruct H1. auto.
 Qed.
 
+Obligation Tactic := idtac.
+
 Program Definition real_plus : (PreRealDom ⊗ PreRealDom)%plt → PreRealDom :=
   PLT.Hom true (PreRealDom ⊗ PreRealDom)%plt PreRealDom real_plus_rel _ _.
 Next Obligation.
-  intros.
-  destruct y. destruct y'.
+  intros x x' y y'. intros.
+  destruct x. destruct x'.
   rewrite real_plus_rel_elem in H1. rewrite real_plus_rel_elem.
-  transitivity {| rint_start := rint_start; rint_end := rint_end; rint_proper := rint_proper |}; auto.
+  transitivity y; auto.
   rewrite H1.
   destruct H. simpl in *.
   apply rint_ord_test. simpl.
@@ -487,10 +489,10 @@ Qed.
 Program Definition real_mult : (PreRealDom ⊗ PreRealDom)%plt → PreRealDom :=
   PLT.Hom true (PreRealDom ⊗ PreRealDom)%plt PreRealDom real_mult_rel _ _.
 Next Obligation.
-  intros.
-  destruct y. destruct y'.
+  intros x x' y y'. intros.
+  destruct x. destruct x'.
   rewrite real_mult_rel_elem in H1. rewrite real_mult_rel_elem.
-  transitivity {| rint_start := rint_start; rint_end := rint_end; rint_proper := rint_proper |}; auto.
+  transitivity y; auto.
   rewrite H1.
   hnf; intros.
   apply rint_mult_correct in H2.
@@ -508,7 +510,6 @@ Next Obligation.
     apply erel_image_elem.
     apply real_mult_rel_elem. auto.
 Qed.
-
 
 Lemma real_mult_canon : forall A (f g:A → PreRealDom),
   canonical A f ->
